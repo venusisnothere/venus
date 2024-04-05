@@ -13,6 +13,7 @@ function AplikasiLava() {
     gasPrice: null,
   });
   const [error, setError] = useState('');
+  const [updateCount, setUpdateCount] = useState(0); // State to track update count
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,6 +38,9 @@ function AplikasiLava() {
           nonce: nonceDecimal,
           gasPrice: gasPriceDecimal,
         });
+
+        // Increment update count
+        setUpdateCount(prevCount => prevCount + 1);
       } catch (error) {
         console.error('Failed to fetch data:', error);
         setError('Failed to fetch data. Check console for details.');
@@ -48,7 +52,6 @@ function AplikasiLava() {
     return () => clearInterval(intervalId);
   }, []);
 
- 
   return (
     <div className="p-5 max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold text-center mb-4">ETH MAINNET DATA</h1>
@@ -60,6 +63,11 @@ function AplikasiLava() {
         <InfoBox label="Nonce" value={data.nonce} />
         <InfoBox label="Gas Price (Gwei)" value={data.gasPrice} />
       </div>
+      {updateCount > 0 && (
+        <div className="mt-4 p-3 bg-green-200 text-green-800 rounded">
+          Data updated {updateCount} times.
+        </div>
+      )}
     </div>
   );
 }
