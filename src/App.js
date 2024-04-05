@@ -65,7 +65,7 @@ function AplikasiLava() {
       </div>
       {updateCount > 0 && (
         <div className="mt-4 p-3 bg-green-200 text-green-800 rounded">
-          Data updated {updateCount} times.
+          Data sudah di update {updateCount} kali bosquee 🚀🚀🚀.
         </div>
       )}
     </div>
