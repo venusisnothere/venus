@@ -49,7 +49,7 @@ function AplikasiLava() {
         console.error('Failed to fetch data:', error);
         setError('Failed to fetch data. Check console for details.');
       } finally {
-        setLoading(false); // Set loading to false after data is fetched
+        // Don't set loading to false here, let it be handled by countdown logic
       }
     };
 
@@ -59,12 +59,15 @@ function AplikasiLava() {
       const interval = randomInterval();
       setCountdown(interval); // Set new countdown interval
       const countdownIntervalId = setInterval(() => {
-        setCountdown(prevCountdown => prevCountdown - 1); // Decrease countdown every second
+        setCountdown(prevCountdown => {
+          if (prevCountdown <= 0) {
+            setLoading(false); // Set loading to false when countdown ends
+            clearInterval(countdownIntervalId); // Clear countdown interval
+            return 0;
+          }
+          return prevCountdown - 1; // Decrease countdown every second
+        });
       }, 1000);
-      setTimeout(() => {
-        setLoading(false); // Set loading to false after countdown ends
-        clearInterval(countdownIntervalId); // Clear countdown interval
-      }, interval * 1000);
     };
 
     const intervalId = setInterval(fetchDataWithCountdown, randomInterval() * 1000); // Convert to milliseconds
