@@ -14,10 +14,14 @@ function AplikasiLava() {
   });
   const [error, setError] = useState('');
   const [updateCount, setUpdateCount] = useState(0); // State to track update count
+  const [countdown, setCountdown] = useState(0); // State for countdown
+  const [loading, setLoading] = useState(false); // State to track loading status
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true); // Set loading to true while fetching data
+
         const address = '0xf89d7b9c864f589bbF53a82105107622B35EaA40';
         const balance = await web3.eth.getBalance(address);
         const blockNumber = await web3.eth.getBlockNumber();
@@ -44,12 +48,23 @@ function AplikasiLava() {
       } catch (error) {
         console.error('Failed to fetch data:', error);
         setError('Failed to fetch data. Check console for details.');
+      } finally {
+        setLoading(false); // Set loading to false after data is fetched
       }
     };
 
-    fetchData();
-    const intervalId = setInterval(fetchData, 10000);
-    return () => clearInterval(intervalId);
+    const randomInterval = () => Math.floor(Math.random() * (10 - 3 + 1) + 3) * 1000; // Convert to milliseconds
+    const intervalId = setInterval(fetchData, randomInterval());
+    fetchData(); // Fetch data immediately
+    setCountdown(randomInterval() / 1000); // Set countdown initially
+    const countdownIntervalId = setInterval(() => {
+      setCountdown(prevCountdown => prevCountdown - 1);
+    }, 1000);
+
+    return () => {
+      clearInterval(intervalId);
+      clearInterval(countdownIntervalId);
+    };
   }, []);
 
   return (
@@ -63,9 +78,19 @@ function AplikasiLava() {
         <InfoBox label="Nonce" value={data.nonce} />
         <InfoBox label="Gas Price (Gwei)" value={data.gasPrice} />
       </div>
+      {loading && (
+        <div className="mt-4 p-3 bg-blue-200 text-blue-800 rounded">
+          Loading...
+        </div>
+      )}
+      {!loading && countdown > 0 && (
+        <div className="mt-4 p-3 bg-yellow-200 text-yellow-800 rounded">
+          Next data fetch in {countdown} seconds
+        </div>
+      )}
       {updateCount > 0 && (
         <div className="mt-4 p-3 bg-green-200 text-green-800 rounded">
-          ini request ke {updateCount}  bosquee 🚀🚀🚀
+          Ini request ke {updateCount}  bosquee 🚀🚀🚀
         </div>
       )}
     </div>
