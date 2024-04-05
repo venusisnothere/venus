@@ -91,11 +91,6 @@ function AplikasiLava() {
         <InfoBox label="Nonce" value={data.nonce} />
         <InfoBox label="Gas Price (Gwei)" value={data.gasPrice} />
       </div>
-      {loading && (
-        <div className="mt-4 p-3 bg-blue-200 text-blue-800 rounded">
-          Loading...
-        </div>
-      )}
       {!loading && countdown > 0 && (
         <div className="mt-4 p-3 bg-yellow-200 text-yellow-800 rounded">
           Next data fetch in {countdown} seconds
@@ -116,4 +111,4 @@ const InfoBox = ({ label, value }) => (
   </div>
 );
 
-export default AplikasiLava;
+export default AplikasiLava; 
