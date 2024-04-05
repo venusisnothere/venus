@@ -58,8 +58,12 @@ function AplikasiLava() {
       fetchData();
       const interval = randomInterval();
       setCountdown(interval); // Set new countdown interval
+      const countdownIntervalId = setInterval(() => {
+        setCountdown(prevCountdown => prevCountdown - 1); // Decrease countdown every second
+      }, 1000);
       setTimeout(() => {
         setLoading(false); // Set loading to false after countdown ends
+        clearInterval(countdownIntervalId); // Clear countdown interval
       }, interval * 1000);
     };
 
