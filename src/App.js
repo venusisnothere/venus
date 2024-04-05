@@ -53,18 +53,18 @@ function AplikasiLava() {
       }
     };
 
-    const randomInterval = () => Math.floor(Math.random() * (10 - 3 + 1) + 3) * 1000; // Convert to milliseconds
-    const intervalId = setInterval(fetchData, randomInterval());
-    fetchData(); // Fetch data immediately
-    setCountdown(randomInterval() / 1000); // Set countdown initially
-    const countdownIntervalId = setInterval(() => {
-      setCountdown(prevCountdown => prevCountdown - 1);
-    }, 1000);
+    const randomInterval = () => Math.floor(Math.random() * (15 - 3 + 1) + 3); // Generate random interval between 3 and 10 seconds
+    const intervalId = setInterval(() => {
+      fetchData();
+      setCountdown(randomInterval()); // Set new countdown interval
+    }, randomInterval() * 1000); // Convert to milliseconds
 
-    return () => {
-      clearInterval(intervalId);
-      clearInterval(countdownIntervalId);
-    };
+    // Fetch data immediately
+    fetchData();
+    // Set initial countdown interval
+    setCountdown(randomInterval());
+
+    return () => clearInterval(intervalId);
   }, []);
 
   return (
