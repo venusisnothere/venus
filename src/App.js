@@ -14,14 +14,10 @@ function AplikasiLava() {
   });
   const [error, setError] = useState('');
   const [updateCount, setUpdateCount] = useState(0); // State to track update count
-  const [countdown, setCountdown] = useState(0); // State for countdown
-  const [loading, setLoading] = useState(false); // State to track loading status
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true); // Set loading to true while fetching data
-
         const address = '0xf89d7b9c864f589bbF53a82105107622B35EaA40';
         const balance = await web3.eth.getBalance(address);
         const blockNumber = await web3.eth.getBlockNumber();
@@ -48,35 +44,11 @@ function AplikasiLava() {
       } catch (error) {
         console.error('Failed to fetch data:', error);
         setError('Failed to fetch data. Check console for details.');
-      } finally {
-        // Don't set loading to false here, let it be handled by countdown logic
       }
     };
 
-    const randomInterval = () => Math.floor(Math.random() * (15 - 3 + 1) + 3); // Generate random interval between 3 and 15 seconds
-    const fetchDataWithCountdown = async () => {
-      fetchData();
-      const interval = randomInterval();
-      setCountdown(interval); // Set new countdown interval
-      const countdownIntervalId = setInterval(() => {
-        setCountdown(prevCountdown => {
-          if (prevCountdown <= 0) {
-            clearInterval(countdownIntervalId); // Clear countdown interval
-            return 0;
-          }
-          return prevCountdown - 1; // Decrease countdown every second
-        });
-      }, 1000);
-      setTimeout(() => {
-        setLoading(false); // Set loading to false after countdown ends
-      }, interval * 1000);
-    };
-
-    const intervalId = setInterval(fetchDataWithCountdown, randomInterval() * 1000); // Convert to milliseconds
-
-    // Fetch data immediately
-    fetchDataWithCountdown();
-
+    fetchData();
+    const intervalId = setInterval(fetchData, 10000);
     return () => clearInterval(intervalId);
   }, []);
 
@@ -91,16 +63,6 @@ function AplikasiLava() {
         <InfoBox label="Nonce" value={data.nonce} />
         <InfoBox label="Gas Price (Gwei)" value={data.gasPrice} />
       </div>
-       {loading && (
-        <div className="mt-4 p-3 bg-blue-200 text-blue-800 rounded">
-          Loading...
-        </div>
-      )}
-      {!loading && countdown > 0 && (
-        <div className="mt-4 p-3 bg-yellow-200 text-yellow-800 rounded">
-          Next data fetch in {countdown} seconds
-        </div>
-      )}
       {updateCount > 0 && (
         <div className="mt-4 p-3 bg-green-200 text-green-800 rounded">
           Ini request ke {updateCount}  bosquee 🚀🚀🚀
@@ -116,4 +78,4 @@ const InfoBox = ({ label, value }) => (
   </div>
 );
 
-export default AplikasiLava; 
+export default AplikasiLava;
